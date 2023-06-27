@@ -1,39 +1,65 @@
+const output = document.getElementById("output");
+const btn = document.getElementById("download-images-button");
+
 const images = [
-  { url: 'https://picsum.photos/400/300', description: 'Image 1' },
-  { url: 'https://picsum.photos/400/300', description: 'Image 2' },
-  { url: 'https://picsum.photos/400/300', description: 'Image 3' },
+  { url: "https://picsum.photos/id/237/200/300", alt:"Image 1"},
+  { url: "https://picsum.photos/id/238/200/300", alt:"Image 2"},
+  { url: "https://picsum.photos/id/239/200/300", alt:"Image 3"},
 ];
-function Images(images) {
-  const imagePromises = images.map(image => {
+
+// btn.addEventListener('click', () => {downloadImages(images);});
+
+function downloadImages(images){
+	// const promises = images.map(image => {
+	// 	return new Promise((res, rej) => {
+	// 		const img = new Image();
+	// 		img.src = image.url;
+	// 		img.alt = image.alt;
+	// 		image.onload = () => {
+	// 			res(img);
+	// 		};
+	// 		img.onerror = () => {
+	// 			reject(`Failed to load image's URL: ${image.url}`);
+	// 		};
+	// 	});
+	// });
+
+	// Promise.all(promises)
+	// .then(imgs => {
+	// 	output.innerHTML = null;
+	// 	imgs.forEach(img => {
+	// 		output.appendChild(img);
+	// 	});
+	// }).catch(error => {
+	// 	console.error(error);
+	// });
+	const promises = images.map(image => {
     return new Promise((resolve, reject) => {
       const img = new Image();
+      img.src = image.url;
+      img.alt = image.alt;
       img.onload = () => {
         resolve(img);
       };
       img.onerror = () => {
         reject(`Failed to load image's URL: ${image.url}`);
       };
-      img.src = image.url;
     });
   });
 
-  Promise.all(imagePromises)
-    .then(images => {	
+  Promise.all(promises)
+    .then(imgs => {
       const output = document.getElementById('output');
-      images.forEach(image => {
-        const imgElement = document.createElement("img");
-        imgElement.src = image.url;
-        imgElement.alt = image.description;
-        imgElement.width = 400;
-        imgElement.height = 300;
-        output.appendChild(imgElement);
+		output.innerHTML = null;
+      imgs.forEach(img => {
+        output.appendChild(img);
       });
     })
     .catch(error => {
       console.error(error);
     });
 }
-const downloadButton = document.getElementById('download-images-button');
-downloadButton.addEventListener('click', () => {
-  Images(images);
+
+btn.addEventListener('click', () => {
+	downloadImages(images);
 });
